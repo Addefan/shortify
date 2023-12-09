@@ -1,0 +1,3 @@
+# Shortify
+
+## [Описание](VISION.md)
