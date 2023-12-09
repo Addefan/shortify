@@ -59,7 +59,10 @@
             </li>
             <li class="nav-item">
               {% url "logout" as nav_item_url %}
-              <a class="nav-link" href="{{ nav_item_url }}">Выйти</a>
+              <form method="post" action="{{ nav_item_url }}">
+                {% csrf_token %}
+                <button class="nav-link" type="submit">Выйти</button>
+              </form>
             </li>
           {% endif %}
         </ul>

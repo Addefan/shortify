@@ -1,4 +1,6 @@
 from django.contrib.auth import login
+from django.contrib.auth.views import LogoutView as DjangoLogoutView
+from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
@@ -16,3 +18,7 @@ class RegisterView(CreateView):
         response = super().form_valid(form)
         login(self.request, self.object)
         return response
+
+
+class LogoutView(SuccessMessageMixin, DjangoLogoutView):
+    next_page = reverse_lazy("main")
