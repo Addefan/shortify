@@ -1,0 +1,45 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="{% url "main" %}">
+      <img src="{% static 'web/favicon.ico' %}" alt="Shortify logo" width="48" class="me-3">
+      Shortify
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu"
+            aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarMenu">
+      <ul class="navbar-nav">
+        {% url "main" as nav_item_url %}
+        {% include "web/navbar-item.html" with text="Создание ссылки" %}
+        {% if user.is_authenticated %}
+          {% url "links" as nav_item_url %}
+          {% include "web/navbar-item.html" with text=user.is_superuser|yesno:"Все ссылки,Мои ссылки" %}
+        {% endif %}
+        {% if user.is_superuser %}
+          {% url "analytics" as nav_item_url %}
+          {% include "web/navbar-item.html" with text="Аналитика" %}
+        {% endif %}
+      </ul>
+      <ul class="navbar-nav ms-auto">
+          {% if not user.is_authenticated %}
+            {% url "register" as nav_item_url %}
+            {% include "web/navbar-item.html" with text="Регистрация" %}
+            {% url "login" as nav_item_url %}
+            {% include "web/navbar-item.html" with text="Вход" %}
+          {% else %}
+            {% url "profile" as nav_item_url %}
+            {% include "web/navbar-item.html" with text=user.username %}
+            {% url "logout" as nav_item_url %}
+            <li class="nav-item">
+              <form method="post" action="{{ nav_item_url }}">
+                {% csrf_token %}
+                <button class="nav-link" type="submit">Выйти</button>
+              </form>
+            </li>
+          {% endif %}
+        </ul>
+    </div>
+  </div>
+</nav>
