@@ -1,7 +1,7 @@
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 
-class RegisterForm(UserCreationForm):
+class BootstrapFormMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = ""
@@ -16,3 +16,11 @@ class RegisterForm(UserCreationForm):
         for visible in self.visible_fields():
             if visible.name in self._errors:
                 visible.field.widget.attrs["class"] += " is-invalid"
+
+
+class RegisterForm(BootstrapFormMixin, UserCreationForm):
+    pass
+
+
+class LoginForm(BootstrapFormMixin, AuthenticationForm):
+    pass
