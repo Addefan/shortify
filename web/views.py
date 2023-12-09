@@ -1,15 +1,13 @@
-from django.contrib.auth import login
-from django.contrib.auth.views import LogoutView as DjangoLogoutView
-from django.contrib.messages.views import SuccessMessageMixin
-from django.urls import reverse_lazy
+from django.contrib.auth.views import LoginView as DjangoLoginView, LogoutView as DjangoLogoutView
 from django.views.generic import CreateView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.urls import reverse_lazy, reverse
+from django.contrib.auth import login
 
-from web.forms import RegisterForm
-from web.models import User
+from web.forms import RegisterForm, LoginForm
 
 
 class RegisterView(CreateView):
-    model = User
     form_class = RegisterForm
     template_name = "web/register.html"
     success_url = reverse_lazy("main")
@@ -18,6 +16,14 @@ class RegisterView(CreateView):
         response = super().form_valid(form)
         login(self.request, self.object)
         return response
+
+
+class LoginView(DjangoLoginView):
+    form_class = LoginForm
+    template_name = "web/login.html"
+
+    def get_success_url(self):
+        return self.request.GET.get("next") or reverse("main")
 
 
 class LogoutView(SuccessMessageMixin, DjangoLogoutView):
