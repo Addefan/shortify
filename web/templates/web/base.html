@@ -46,11 +46,11 @@
           {% if not user.is_authenticated %}
             <li class="nav-item">
               {% url "register" as nav_item_url %}
-              <a class="nav-link{% if request.path == nav_item_url %} active{% endif %}" href="{{ nav_item_url }}">Зарегистрироваться</a>
+              <a class="nav-link{% if request.path == nav_item_url %} active{% endif %}" href="{{ nav_item_url }}">Регистрация</a>
             </li>
             <li class="nav-item">
               {% url "login" as nav_item_url %}
-              <a class="nav-link{% if request.path == nav_item_url %} active{% endif %}" href="{{ nav_item_url }}">Войти</a>
+              <a class="nav-link{% if request.path == nav_item_url %} active{% endif %}" href="{{ nav_item_url }}">Вход</a>
             </li>
           {% else %}
             <li class="nav-item">
