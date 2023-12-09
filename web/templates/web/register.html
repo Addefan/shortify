@@ -1,0 +1,31 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+  <div class="col-4"></div>
+  <div class="col-4">
+    <div class="card p-4">
+      <div class="card-body">
+        <h3 class="mb-3">Регистрация</h3>
+        <form method="post">
+          {% csrf_token %}
+          {% for field in form %}
+            <div class="form-floating mb-3">
+              {{ field }}
+              {{ field.label_tag }}
+              {% if field.help_text %}
+                <div class="form-text">{{ field.help_text }}</div>
+              {% endif %}
+              {% for error in field.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+              {% endfor %}
+            </div>
+          {% endfor %}
+          <div class="mb-3">
+            <button class="btn btn-primary w-100 text-left" type="submit">Зарегистрироваться</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-4"></div>
+  </div>
+{% endblock content %}
