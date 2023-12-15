@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 
 
 class BootstrapFormMixin:
@@ -24,3 +24,14 @@ class RegisterForm(BootstrapFormMixin, UserCreationForm):
 
 class LoginForm(BootstrapFormMixin, AuthenticationForm):
     pass
+
+
+class ProfileForm(BootstrapFormMixin, UserChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["username"].disabled = True
+        self.fields.pop("password", None)
+
+    class Meta(UserChangeForm.Meta):
+        fields = ("first_name", "last_name", "email", "username")
+        help_texts = {"username": None}
