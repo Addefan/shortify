@@ -6,9 +6,9 @@ User = get_user_model()
 
 class Link(models.Model):
     user = models.ForeignKey(User, models.SET_NULL, null=True, blank=True)
-    original_absolute_url = models.URLField(max_length=2048)
-    short_relative_url = models.CharField(max_length=128)
-    is_public = models.BinaryField(default=True)
+    original_absolute_url = models.URLField(max_length=2048, verbose_name="Сокращаемая ссылка")
+    short_relative_url = models.URLField(max_length=128)
+    is_public = models.BooleanField(default=True, verbose_name="Открыть доступ к ссылке")
     created_at = models.DateTimeField(auto_now_add=True)
 
 
