@@ -1,6 +1,6 @@
 from django.contrib.auth.views import LoginView as DjangoLoginView, LogoutView as DjangoLogoutView
-from django.views.generic import CreateView, UpdateView, RedirectView, DetailView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import CreateView, UpdateView, RedirectView, DetailView, ListView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth import login
 from django.shortcuts import get_object_or_404
@@ -71,3 +71,20 @@ class LinkPreviewView(DetailView):
     pk_url_kwarg = "id"
     context_object_name = "link"
     template_name = "web/link-preview.html"
+
+
+class LinkListView(LoginRequiredMixin, ListView):
+    model = Link
+    context_object_name = "links"
+    template_name = "web/link-list.html"
+
+
+class LinkDeleteView(UserPassesTestMixin, DeleteView):
+    model = Link
+    pk_url_kwarg = "id"
+
+    def test_func(self):
+        return self.request.user == self.get_object().user or self.request.user.is_superuser
+
+    def get_success_url(self):
+        return self.request.POST.get("next") or reverse("main")

@@ -14,7 +14,7 @@
         {% url "main" as nav_item_url %}
         {% include "web/navbar-item.html" with text="Создание ссылки" %}
         {% if user.is_authenticated %}
-          {% url "links" as nav_item_url %}
+          {% url "link-list" as nav_item_url %}
           {% include "web/navbar-item.html" with text=user.is_superuser|yesno:"Все ссылки,Мои ссылки" %}
         {% endif %}
         {% if user.is_superuser %}

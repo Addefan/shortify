@@ -12,7 +12,13 @@
             <img src="{% static "web/svg/check-circle-fill.svg" %}" class="bi flex-shrink-0 me-3" alt="Info:" aria-label="Info:">
             <div>Ссылка{% if not link.is_public %} не{% endif %} доступна другим пользователям</div>
           </div>
-          <a href="{{ short_url }}">{{ short_url }}</a>
+          <div class="d-flex w-100 justify-content-between align-items-center">
+            <a href="{{ short_url }}">{{ short_url }}</a>
+            <form method="post" action="{% url 'link-delete' link.id %}">
+                {% csrf_token %}
+                <button class="btn btn-outline-danger">Удалить</button>
+            </form>
+          </div>
           <button class="btn btn-primary w-100 text-left outline mt-3"
                   onClick="navigator.clipboard.writeText('{{ short_url }}')"
                   type="button">Скопировать в буфер обмена
