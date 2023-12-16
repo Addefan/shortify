@@ -1,20 +1,24 @@
 from django.contrib.auth.views import LoginView as DjangoLoginView, LogoutView as DjangoLogoutView
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, RedirectView
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth import login
+from django.shortcuts import get_object_or_404
 
 from web.forms import RegisterForm, LoginForm, ProfileForm, LinkCreationForm
+from web.models import Link
 
 
 class CreateLinkView(CreateView):
     form_class = LinkCreationForm
     template_name = "web/create-link-form.html"
-    success_url = reverse_lazy("link-preview")
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user
         return kwargs
+
+    def get_success_url(self):
+        return reverse("link-preview", args=(self.object.id,))
 
 
 class RegisterView(CreateView):
@@ -47,3 +51,9 @@ class ProfileView(UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+
+class LinkView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        link = get_object_or_404(Link, short_relative_url=kwargs["short_url"])
+        return link.original_absolute_url
