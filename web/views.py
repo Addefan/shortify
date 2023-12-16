@@ -66,7 +66,7 @@ class LinkView(RedirectView):
         return link.original_absolute_url
 
 
-class LinkPreviewView(LoginRequiredMixin, DetailView):
+class LinkPreviewView(DetailView):
     model = Link
     pk_url_kwarg = "id"
     context_object_name = "link"
