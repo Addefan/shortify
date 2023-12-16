@@ -14,10 +14,12 @@
           </div>
           <div class="d-flex w-100 justify-content-between align-items-center">
             <a href="{{ short_url }}">{{ short_url }}</a>
-            <form method="post" action="{% url 'link-delete' link.id %}">
+            {% if link.user == user or user.is_superuser %}
+            	<form method="post" action="{% url 'link-delete' link.id %}">
                 {% csrf_token %}
                 <button class="btn btn-outline-danger">Удалить</button>
-            </form>
+              </form>
+            {% endif %}
           </div>
           <button class="btn btn-primary w-100 text-left outline mt-3"
                   onClick="navigator.clipboard.writeText('{{ short_url }}')"
