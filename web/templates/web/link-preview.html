@@ -1,0 +1,20 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+  <div class="col-4"></div>
+  <div class="col-4">
+    <div class="card p-4">
+      <div class="card-body">
+        {% with short_url=request.is_secure|yesno:"https://,http://"|add:request.get_host|add:link.get_absolute_url %}
+          <h3 class="mb-3">Сокращённая ссылка</h3>
+          <a href="{{ short_url }}">{{ short_url }}</a>
+          <button class="btn btn-primary w-100 text-left outline mt-3"
+                  onClick="navigator.clipboard.writeText('{{ short_url }}')"
+                  type="button">Скопировать в буфер обмена
+          </button>
+        {% endwith %}
+      </div>
+    </div>
+    <div class="col-4"></div>
+  </div>
+{% endblock %}
