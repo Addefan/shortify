@@ -37,6 +37,7 @@ class RegisterView(CreateView):
 class LoginView(DjangoLoginView):
     form_class = LoginForm
     template_name = "web/login.html"
+    redirect_authenticated_user = True
 
     def get_success_url(self):
         return self.request.GET.get("next") or reverse("main")
