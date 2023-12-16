@@ -30,7 +30,7 @@
             {% include "web/navbar-item.html" with text="Вход" %}
           {% else %}
             {% url "profile" as nav_item_url %}
-            {% include "web/navbar-item.html" with text=user.username %}
+            {% include "web/navbar-item.html" with text=user.username external_classes=" fw-bold" %}
             {% url "logout" as nav_item_url %}
             <li class="nav-item">
               <form method="post" action="{{ nav_item_url }}">
