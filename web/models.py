@@ -18,6 +18,6 @@ class Link(models.Model):
 
 class Visit(models.Model):
     link = models.ForeignKey(Link, models.CASCADE, verbose_name="Ссылка")
-    visitor_ip = models.GenericIPAddressField(verbose_name="IP посетителя")
+    visitor_ip = models.GenericIPAddressField(null=True, blank=True, verbose_name="IP посетителя")
     user = models.ForeignKey(User, models.SET_NULL, null=True, blank=True, verbose_name="Посетитель")
     visited_at = models.DateTimeField(auto_now_add=True, verbose_name="Посетил в")
