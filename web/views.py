@@ -3,7 +3,18 @@ from django.views.generic import CreateView, UpdateView
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth import login
 
-from web.forms import RegisterForm, LoginForm, ProfileForm
+from web.forms import RegisterForm, LoginForm, ProfileForm, LinkCreationForm
+
+
+class CreateLinkView(CreateView):
+    form_class = LinkCreationForm
+    template_name = "web/create-link-form.html"
+    success_url = reverse_lazy("link-preview")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
 
 class RegisterView(CreateView):
