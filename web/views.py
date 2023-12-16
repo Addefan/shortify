@@ -1,5 +1,5 @@
 from django.contrib.auth.views import LoginView as DjangoLoginView, LogoutView as DjangoLogoutView
-from django.views.generic import CreateView, UpdateView, RedirectView, DetailView, ListView
+from django.views.generic import CreateView, UpdateView, RedirectView, DetailView, ListView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth import login
@@ -77,3 +77,11 @@ class LinkListView(LoginRequiredMixin, ListView):
     model = Link
     context_object_name = "links"
     template_name = "web/link-list.html"
+
+
+class LinkDeleteView(DeleteView):
+    model = Link
+    pk_url_kwarg = "id"
+
+    def get_success_url(self):
+        return self.request.POST.get("next") or reverse("main")
