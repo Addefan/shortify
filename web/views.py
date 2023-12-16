@@ -1,5 +1,5 @@
 from django.contrib.auth.views import LoginView as DjangoLoginView, LogoutView as DjangoLogoutView
-from django.views.generic import CreateView, UpdateView, RedirectView, DetailView
+from django.views.generic import CreateView, UpdateView, RedirectView, DetailView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth import login
@@ -71,3 +71,9 @@ class LinkPreviewView(DetailView):
     pk_url_kwarg = "id"
     context_object_name = "link"
     template_name = "web/link-preview.html"
+
+
+class LinkListView(LoginRequiredMixin, ListView):
+    model = Link
+    context_object_name = "links"
+    template_name = "web/link-list.html"
