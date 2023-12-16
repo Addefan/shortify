@@ -1,5 +1,6 @@
 from django.contrib.auth.views import LoginView as DjangoLoginView, LogoutView as DjangoLogoutView
 from django.views.generic import CreateView, UpdateView, RedirectView, DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth import login
 from django.shortcuts import get_object_or_404
@@ -45,7 +46,7 @@ class LogoutView(DjangoLogoutView):
     next_page = reverse_lazy("main")
 
 
-class ProfileView(UpdateView):
+class ProfileView(LoginRequiredMixin, UpdateView):
     form_class = ProfileForm
     template_name = "web/profile.html"
     success_url = reverse_lazy("profile")
@@ -64,7 +65,7 @@ class LinkView(RedirectView):
         return link.original_absolute_url
 
 
-class LinkPreviewView(DetailView):
+class LinkPreviewView(LoginRequiredMixin, DetailView):
     model = Link
     pk_url_kwarg = "id"
     context_object_name = "link"
