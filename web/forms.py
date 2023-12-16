@@ -1,15 +1,20 @@
+from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 
 
 class BootstrapFormMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         self.label_suffix = ""
         for visible in self.visible_fields():
-            visible.field.widget.attrs.update({
-                "class": "form-control",
-                "placeholder": "placeholder"
-            })
+            if isinstance(visible.field.widget, forms.CheckboxInput):
+                visible.field.widget.attrs["class"] = "form-check-input"
+            else:
+                visible.field.widget.attrs.update({
+                    "class": "form-control",
+                    "placeholder": "placeholder"
+                })
 
     def clean(self):
         super().clean()
