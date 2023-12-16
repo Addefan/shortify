@@ -3,6 +3,7 @@ from django.views.generic import CreateView, UpdateView, RedirectView, DetailVie
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth import login
 from django.shortcuts import get_object_or_404
+from django.http import Http404
 
 from web.forms import RegisterForm, LoginForm, ProfileForm, LinkCreationForm
 from web.models import Link
@@ -56,6 +57,10 @@ class ProfileView(UpdateView):
 class LinkView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         link = get_object_or_404(Link, short_relative_url=kwargs["short_url"])
+
+        if not link.is_public and self.request.user != link.user:
+            raise Http404
+
         return link.original_absolute_url
 
 
