@@ -94,9 +94,11 @@ class LinkListView(LoginRequiredMixin, ListView):
     template_name = "web/link-list.html"
 
     def get_queryset(self):
+        links = Link.objects.select_related("user")
+
         if not self.request.user.is_superuser:
-            return Link.objects.filter(user=self.request.user)
-        return Link.objects.all()
+            return links.filter(user=self.request.user)
+        return links.all()
 
 
 class LinkDeleteView(UserPassesTestMixin, DeleteView):
