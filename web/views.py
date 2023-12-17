@@ -1,13 +1,14 @@
-from django.contrib.auth.views import LoginView as DjangoLoginView, LogoutView as DjangoLogoutView
-from django.views.generic import CreateView, UpdateView, RedirectView, DetailView, ListView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.urls import reverse_lazy, reverse
 from django.contrib.auth import login
-from django.shortcuts import get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.views import LoginView as DjangoLoginView, LogoutView as DjangoLogoutView
 from django.http import Http404
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy, reverse
+from django.views.generic import CreateView, UpdateView, RedirectView, DetailView, ListView, DeleteView
+from ipware import get_client_ip
 
 from web.forms import RegisterForm, LoginForm, ProfileForm, LinkCreationForm
-from web.models import Link
+from web.models import Link, Visit
 
 
 class CreateLinkView(CreateView):
@@ -57,6 +58,20 @@ class ProfileView(LoginRequiredMixin, UpdateView):
 
 
 class LinkView(RedirectView):
+    def get(self, request, *args, **kwargs):
+        link = get_object_or_404(Link, short_relative_url=kwargs["short_url"])
+        visit = Visit(link=link)
+
+        if request.user.is_authenticated:
+            visit.user = request.user
+
+        visitor_ip, is_routable = get_client_ip(request)
+        if visitor_ip and is_routable:
+            visit.visitor_ip = visitor_ip
+
+        visit.save()
+        return super().get(request, *args, **kwargs)
+
     def get_redirect_url(self, *args, **kwargs):
         link = get_object_or_404(Link, short_relative_url=kwargs["short_url"])
 
@@ -79,9 +94,11 @@ class LinkListView(LoginRequiredMixin, ListView):
     template_name = "web/link-list.html"
 
     def get_queryset(self):
+        links = Link.objects.select_related("user")
+
         if not self.request.user.is_superuser:
-            return Link.objects.filter(user=self.request.user)
-        return Link.objects.all()
+            return links.filter(user=self.request.user)
+        return links.all()
 
 
 class LinkDeleteView(UserPassesTestMixin, DeleteView):

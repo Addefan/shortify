@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, User
 from django.forms import ModelForm
 
 from web.models import Link
-from web.service import generate_short_link
+from web.services import generate_short_link
 
 
 class BootstrapFormMixin:

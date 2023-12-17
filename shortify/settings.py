@@ -50,6 +50,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+if DEBUG:
+    MIDDLEWARE.append("shortify.middlewares.SqlPrintingMiddleware")
+
+
 ROOT_URLCONF = 'shortify.urls'
 
 TEMPLATES = [

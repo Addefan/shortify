@@ -12,3 +12,7 @@
 4. `docker-compose up -d` - поднятие базы даннных
 5. `python manage.py migrate` - применение миграций
 6. `python manage.py runserver` - запуск сервера
+
+## Дополнительные возможности
+
+- `python manage.py generate_test_data [--amount <int>]` - генерация тестовых данных (по умолчанию 1000 объектов модели Visit)
