@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView, RedirectView, DetailView, ListView, DeleteView
 from ipware import get_client_ip
+from django.db.models import Count, Sum, F, Case, When, Value, IntegerField, Q
 
 from web.forms import RegisterForm, LoginForm, ProfileForm, LinkCreationForm
 from web.models import Link, Visit
@@ -110,3 +111,33 @@ class LinkDeleteView(UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return self.request.POST.get("next") or reverse("main")
+
+
+class VisitAnalyticsView(UserPassesTestMixin, ListView):
+    template_name = "web/visit-analytics.html"
+    context_object_name = "visits"
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def get_queryset(self):
+        visits = Visit.objects.select_related("user").select_related("link")
+
+        search = self.request.GET.get("q")
+        if search:
+            visits = visits.filter(Q(user__username__icontains=search) | Q(link__short_relative_url__icontains=search) |
+                                   Q(link__original_absolute_url__icontains=search) | Q(visitor_ip__icontains=search))
+
+        return visits
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context_data = super().get_context_data(object_list=None, **kwargs)
+        context_data["overall"] = (Visit.objects.select_related("link")
+                                   .aggregate(count=Count("id"),
+                                              public_percent=Sum(Case(When(link__is_public=True, then=1),
+                                                                      default=Value(0),
+                                                                      output_field=IntegerField())
+                                                                 ) * 100.0 / F("count")
+                                              )
+                                   )
+        return context_data
