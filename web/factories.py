@@ -1,6 +1,6 @@
 import factory
 
-from web.models import User, Link
+from web.models import User, Link, Visit
 from django.utils.timezone import now
 
 from web.services import generate_short_link
@@ -28,3 +28,16 @@ class LinkFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Link
         exclude = ("has_user",)
+
+
+class VisitFactory(factory.django.DjangoModelFactory):
+    link = factory.SubFactory(LinkFactory)
+    has_visitor_ip = factory.Faker("pybool")
+    visitor_ip = factory.Maybe("has_visitor_ip", factory.Faker("ipv4"), None)
+    has_user = factory.Faker("pybool")
+    user = factory.Maybe("has_user", factory.SubFactory(User), None)
+    visited_at = factory.LazyFunction(now)
+
+    class Meta:
+        model = Visit
+        exclude = ("has_visitor_ip", "has_user")
