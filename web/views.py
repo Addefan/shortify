@@ -125,19 +125,21 @@ class VisitAnalyticsView(UserPassesTestMixin, ListView):
 
         search = self.request.GET.get("q")
         if search:
-            visits = visits.filter(Q(user__username__icontains=search) | Q(link__short_relative_url__icontains=search) |
-                                   Q(link__original_absolute_url__icontains=search) | Q(visitor_ip__icontains=search))
+            visits = visits.filter(
+                Q(user__username__icontains=search)
+                | Q(link__short_relative_url__icontains=search)
+                | Q(link__original_absolute_url__icontains=search)
+                | Q(visitor_ip__icontains=search)
+            )
 
         return visits
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context_data = super().get_context_data(object_list=None, **kwargs)
-        context_data["overall"] = (Visit.objects.select_related("link")
-                                   .aggregate(count=Count("id"),
-                                              public_percent=Sum(Case(When(link__is_public=True, then=1),
-                                                                      default=Value(0),
-                                                                      output_field=IntegerField())
-                                                                 ) * 100.0 / F("count")
-                                              )
-                                   )
+        context_data["overall"] = Visit.objects.select_related("link").aggregate(
+            count=Count("id"),
+            public_percent=Sum(Case(When(link__is_public=True, then=1), default=Value(0), output_field=IntegerField()))
+            * 100.0
+            / F("count"),
+        )
         return context_data

@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('web', '0002_alter_link_created_at_and_more'),
+        ("web", "0002_alter_link_created_at_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='link',
-            name='original_absolute_url',
-            field=models.URLField(max_length=2048, verbose_name='Ссылка для сокращения'),
+            model_name="link",
+            name="original_absolute_url",
+            field=models.URLField(max_length=2048, verbose_name="Ссылка для сокращения"),
         ),
     ]

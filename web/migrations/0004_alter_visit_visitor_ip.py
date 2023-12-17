@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('web', '0003_alter_link_original_absolute_url'),
+        ("web", "0003_alter_link_original_absolute_url"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='visit',
-            name='visitor_ip',
-            field=models.GenericIPAddressField(blank=True, null=True, verbose_name='IP посетителя'),
+            model_name="visit",
+            name="visitor_ip",
+            field=models.GenericIPAddressField(blank=True, null=True, verbose_name="IP посетителя"),
         ),
     ]

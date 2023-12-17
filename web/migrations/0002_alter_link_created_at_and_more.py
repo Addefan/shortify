@@ -6,51 +6,62 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('web', '0001_initial'),
+        ("web", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='link',
-            name='created_at',
-            field=models.DateTimeField(auto_now_add=True, verbose_name='Создана в'),
+            model_name="link",
+            name="created_at",
+            field=models.DateTimeField(auto_now_add=True, verbose_name="Создана в"),
         ),
         migrations.AlterField(
-            model_name='link',
-            name='original_absolute_url',
-            field=models.URLField(max_length=2048, verbose_name='Ссылка для сокращеная'),
+            model_name="link",
+            name="original_absolute_url",
+            field=models.URLField(max_length=2048, verbose_name="Ссылка для сокращеная"),
         ),
         migrations.AlterField(
-            model_name='link',
-            name='short_relative_url',
-            field=models.URLField(max_length=128, verbose_name='Сокращённая ссылка'),
+            model_name="link",
+            name="short_relative_url",
+            field=models.URLField(max_length=128, verbose_name="Сокращённая ссылка"),
         ),
         migrations.AlterField(
-            model_name='link',
-            name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, verbose_name='Создатель ссылки'),
+            model_name="link",
+            name="user",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="Создатель ссылки",
+            ),
         ),
         migrations.AlterField(
-            model_name='visit',
-            name='link',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='web.link', verbose_name='Ссылка'),
+            model_name="visit",
+            name="link",
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="web.link", verbose_name="Ссылка"),
         ),
         migrations.AlterField(
-            model_name='visit',
-            name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, verbose_name='Посетитель'),
+            model_name="visit",
+            name="user",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="Посетитель",
+            ),
         ),
         migrations.AlterField(
-            model_name='visit',
-            name='visited_at',
-            field=models.DateTimeField(auto_now_add=True, verbose_name='Посетил в'),
+            model_name="visit",
+            name="visited_at",
+            field=models.DateTimeField(auto_now_add=True, verbose_name="Посетил в"),
         ),
         migrations.AlterField(
-            model_name='visit',
-            name='visitor_ip',
-            field=models.GenericIPAddressField(verbose_name='IP посетителя'),
+            model_name="visit",
+            name="visitor_ip",
+            field=models.GenericIPAddressField(verbose_name="IP посетителя"),
         ),
     ]

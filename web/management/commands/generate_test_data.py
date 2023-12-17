@@ -6,8 +6,9 @@ from web.factories import VisitFactory
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
-        parser.add_argument("--amount", type=int, default=1000,
-                            help="Количество объектов Visit для генерирования (по умолчанию 1000).")
+        parser.add_argument(
+            "--amount", type=int, default=1000, help="Количество объектов Visit для генерирования (по умолчанию 1000)."
+        )
 
     def handle(self, *args, **options):
         count = 0

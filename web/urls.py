@@ -1,8 +1,17 @@
 from django.urls import path
 
-from web.views import (CreateLinkView, RegisterView, LoginView, LogoutView,
-                       ProfileView, LinkView, LinkPreviewView, LinkListView,
-                       LinkDeleteView, VisitAnalyticsView)
+from web.views import (
+    CreateLinkView,
+    RegisterView,
+    LoginView,
+    LogoutView,
+    ProfileView,
+    LinkView,
+    LinkPreviewView,
+    LinkListView,
+    LinkDeleteView,
+    VisitAnalyticsView,
+)
 
 urlpatterns = [
     path("", CreateLinkView.as_view(), name="main"),
