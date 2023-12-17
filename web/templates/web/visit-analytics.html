@@ -1,0 +1,36 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+  <div class="col-8">
+    <h3 class="mb-3">Посещения ссылок</h3>
+    <table class="table table-hover table-responsive">
+      <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Пользователь</th>
+        <th scope="col">IP</th>
+        <th scope="col">Страна</th>
+        <th scope="col">Город</th>
+        <th scope="col">Ссылка</th>
+        <th scope="col">Посещено в</th>
+      </tr>
+      </thead>
+      <tbody class="table-group-divider">
+      {% for visit in visits %}
+        <tr>
+          <th scope="row">{{ visit.id }}</th>
+          <td>{{ visit.user|default:"——" }}</td>
+          <td>{{ visit.visitor_ip|default:"——" }}</td>
+          <td>{{ visit.get_location.country|default:"——" }}</td>
+          <td>{{ visit.get_location.city|default:"——" }}</td>
+          {% with short_url=request.is_secure|yesno:"https://,http://"|add:request.get_host|add:visit.link.get_absolute_url %}
+            <td><a href="{{ short_url }}">{{ short_url }}</a></td>
+          {% endwith %}
+          <td>{{ visit.visited_at }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="col-4"></div>
+{% endblock content %}

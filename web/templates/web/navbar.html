@@ -18,7 +18,7 @@
           {% include "web/navbar-item.html" with text=user.is_superuser|yesno:"Все ссылки,Мои ссылки" %}
         {% endif %}
         {% if user.is_superuser %}
-          {% url "analytics" as nav_item_url %}
+          {% url "visit-analytics" as nav_item_url %}
           {% include "web/navbar-item.html" with text="Аналитика" %}
         {% endif %}
       </ul>

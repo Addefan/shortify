@@ -110,3 +110,15 @@ class LinkDeleteView(UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return self.request.POST.get("next") or reverse("main")
+
+
+class VisitAnalyticsView(UserPassesTestMixin, ListView):
+    template_name = "web/visit-analytics.html"
+    context_object_name = "visits"
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def get_queryset(self):
+        return Visit.objects.select_related("user").select_related("link")
+
