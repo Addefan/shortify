@@ -18,10 +18,10 @@ class UserFactory(factory.django.DjangoModelFactory):
 
 
 class LinkFactory(factory.django.DjangoModelFactory):
-    has_user = factory.Faker("pybool")
-    user = factory.Maybe("has_user", factory.SubFactory(User), None)
+    has_user = factory.Faker("pybool", truth_probability=50)
+    user = factory.Maybe("has_user", factory.SubFactory(UserFactory), None)
     original_absolute_url = factory.Faker("url")
-    short_relative_url = factory.LazyFunction(generate_short_link)
+    short_relative_url = factory.LazyAttribute(lambda instance: generate_short_link(instance.original_absolute_url))
     is_public = factory.Faker("pybool")
     created_at = factory.LazyFunction(now)
 
@@ -32,12 +32,11 @@ class LinkFactory(factory.django.DjangoModelFactory):
 
 class VisitFactory(factory.django.DjangoModelFactory):
     link = factory.SubFactory(LinkFactory)
-    has_visitor_ip = factory.Faker("pybool")
+    has_visitor_ip = factory.Faker("pybool", truth_probability=80)
     visitor_ip = factory.Maybe("has_visitor_ip", factory.Faker("ipv4"), None)
-    has_user = factory.Faker("pybool")
-    user = factory.Maybe("has_user", factory.SubFactory(User), None)
+    user = factory.SelfAttribute("link.user")
     visited_at = factory.LazyFunction(now)
 
     class Meta:
         model = Visit
-        exclude = ("has_visitor_ip", "has_user")
+        exclude = ("has_visitor_ip",)
