@@ -38,5 +38,11 @@
       <li>Всего создано {{ overall.count }} ссылок</li>
       <li>{{ overall.public_percent|floatformat }}% созданных ссылок - публичные</li>
     </ul>
+    <h3 class="mb-3">Поиск</h3>
+    <form class="d-flex" role="search">
+      <input class="form-control me-2" name="q" type="search" aria-label="Search" value="{{ request.GET.q }}">
+      <button class="btn btn-outline-success" type="submit">Найти</button>
+    </form>
+    <div class="form-text">Поиск по пользователю, IP, полной или сокращённой ссылке.</div>
   </div>
 {% endblock content %}

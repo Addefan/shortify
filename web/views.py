@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView, RedirectView, DetailView, ListView, DeleteView
 from ipware import get_client_ip
-from django.db.models import Count, Sum, F, Case, When, Value, IntegerField
+from django.db.models import Count, Sum, F, Case, When, Value, IntegerField, Q
 
 from web.forms import RegisterForm, LoginForm, ProfileForm, LinkCreationForm
 from web.models import Link, Visit
@@ -121,7 +121,14 @@ class VisitAnalyticsView(UserPassesTestMixin, ListView):
         return self.request.user.is_superuser
 
     def get_queryset(self):
-        return Visit.objects.select_related("user").select_related("link")
+        visits = Visit.objects.select_related("user").select_related("link")
+
+        search = self.request.GET.get("q")
+        if search:
+            visits = visits.filter(Q(user__username__icontains=search) | Q(link__short_relative_url__icontains=search) |
+                                   Q(link__original_absolute_url__icontains=search) | Q(visitor_ip__icontains=search))
+
+        return visits
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context_data = super().get_context_data(object_list=None, **kwargs)
@@ -133,5 +140,4 @@ class VisitAnalyticsView(UserPassesTestMixin, ListView):
                                                                  ) * 100.0 / F("count")
                                               )
                                    )
-        print(context_data["overall"])
         return context_data
