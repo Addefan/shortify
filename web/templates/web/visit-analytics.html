@@ -32,5 +32,11 @@
       </tbody>
     </table>
   </div>
-  <div class="col-4"></div>
+  <div class="col-4">
+    <h3 class="mb-3">Статистика</h3>
+    <ul>
+      <li>Всего создано {{ overall.count }} ссылок</li>
+      <li>{{ overall.public_percent|floatformat }}% созданных ссылок - публичные</li>
+    </ul>
+  </div>
 {% endblock content %}

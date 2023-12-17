@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView, RedirectView, DetailView, ListView, DeleteView
 from ipware import get_client_ip
+from django.db.models import Count, Sum, F, Case, When, Value, IntegerField
 
 from web.forms import RegisterForm, LoginForm, ProfileForm, LinkCreationForm
 from web.models import Link, Visit
@@ -122,3 +123,15 @@ class VisitAnalyticsView(UserPassesTestMixin, ListView):
     def get_queryset(self):
         return Visit.objects.select_related("user").select_related("link")
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context_data = super().get_context_data(object_list=None, **kwargs)
+        context_data["overall"] = (Visit.objects.select_related("link")
+                                   .aggregate(count=Count("id"),
+                                              public_percent=Sum(Case(When(link__is_public=True, then=1),
+                                                                      default=Value(0),
+                                                                      output_field=IntegerField())
+                                                                 ) * 100.0 / F("count")
+                                              )
+                                   )
+        print(context_data["overall"])
+        return context_data
